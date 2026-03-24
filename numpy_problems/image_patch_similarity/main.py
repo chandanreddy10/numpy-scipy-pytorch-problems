@@ -23,13 +23,15 @@ def extract_patches(image_array, h_patch_size=H_PATCH_SIZE, w_patch_size=W_PATCH
     h_patches = H // h_patch_size
     w_patches = W // w_patch_size
 
-    image_array = image_array[:, :h_patches * h_patch_size, :w_patches * w_patch_size]
+    image_array = image_array[:, : h_patches * h_patch_size, : w_patches * w_patch_size]
     patches = image_array.reshape(C, h_patches, h_patch_size, w_patches, w_patch_size)
 
     return image_array, patches, h_patches, w_patches
 
 
-def get_reference_patch(patches, h_patches, w_patches, h_patch_index=None, w_patch_index=None):
+def get_reference_patch(
+    patches, h_patches, w_patches, h_patch_index=None, w_patch_index=None
+):
     """
     Returns a reference patch at given index else takes random patch
     """
@@ -45,8 +47,13 @@ def get_reference_patch(patches, h_patches, w_patches, h_patch_index=None, w_pat
     return reference_patch, h_patch_index, w_patch_index
 
 
-def return_similar_patches(image_array, sim_across_channels, topk=100,
-                           h_patch_size=H_PATCH_SIZE, w_patch_size=W_PATCH_SIZE):
+def return_similar_patches(
+    image_array,
+    sim_across_channels,
+    topk=100,
+    h_patch_size=H_PATCH_SIZE,
+    w_patch_size=W_PATCH_SIZE,
+):
     """
     Returns the most similar patches
     """
@@ -72,17 +79,22 @@ def calculate_similarity(patches, reference_patch):
 
     dot = (patches * reference_patch).sum(axis=(0, 2, 4))
 
-    patch_norm = np.sqrt((patches ** 2).sum(axis=(0, 2, 4)))
-    ref_norm = np.sqrt((reference_patch ** 2).sum())
+    patch_norm = np.sqrt((patches**2).sum(axis=(0, 2, 4)))
+    ref_norm = np.sqrt((reference_patch**2).sum())
 
     sim = 1 - (dot / (patch_norm * ref_norm + 1e-8))
 
     return sim
 
 
-def plot_similar_patches(image_array, similar_patches,
-                         h_patch_index, w_patch_index,
-                         h_patch_size=H_PATCH_SIZE, w_patch_size=W_PATCH_SIZE):
+def plot_similar_patches(
+    image_array,
+    similar_patches,
+    h_patch_index,
+    w_patch_index,
+    h_patch_size=H_PATCH_SIZE,
+    w_patch_size=W_PATCH_SIZE,
+):
 
     img = image_array.transpose(1, 2, 0)
 
@@ -98,8 +110,8 @@ def plot_similar_patches(image_array, similar_patches,
             w_patch_size,
             h_patch_size,
             linewidth=2,
-            edgecolor='red',
-            facecolor='none'
+            edgecolor="red",
+            facecolor="none",
         )
         ax.add_patch(rect)
 
@@ -108,8 +120,8 @@ def plot_similar_patches(image_array, similar_patches,
         w_patch_size,
         h_patch_size,
         linewidth=2,
-        edgecolor='green',
-        facecolor='none'
+        edgecolor="green",
+        facecolor="none",
     )
     ax.add_patch(rect)
 
@@ -132,11 +144,7 @@ def normalize_reference_patch(p):
 image_array, patches, h_patches, w_patches = extract_patches(img_array)
 
 reference_patch, h_patch_index, w_patch_index = get_reference_patch(
-    patches,
-    h_patches,
-    w_patches,
-    h_patch_index=3,
-    w_patch_index=3
+    patches, h_patches, w_patches, h_patch_index=3, w_patch_index=3
 )
 
 patches = normalize_patches(patches)
@@ -150,14 +158,9 @@ similar_patches = return_similar_patches(
     similarity_matrix,
     topk=15,
     h_patch_size=H_PATCH_SIZE,
-    w_patch_size=W_PATCH_SIZE
+    w_patch_size=W_PATCH_SIZE,
 )
 
 print(similar_patches)
 
-plot_similar_patches(
-    image_array,
-    similar_patches,
-    h_patch_index,
-    w_patch_index
-)
+plot_similar_patches(image_array, similar_patches, h_patch_index, w_patch_index)
