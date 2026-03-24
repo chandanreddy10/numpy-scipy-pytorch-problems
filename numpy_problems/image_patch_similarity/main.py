@@ -10,8 +10,8 @@ img_array = np.array(img)
 # (C, H, W) -> (H, W, C)
 img_array = np.moveaxis(img_array, -1, 0)
 
-H_PATCH_SIZE = 16
-W_PATCH_SIZE = 16
+H_PATCH_SIZE = 64
+W_PATCH_SIZE = 64
 
 
 def extract_patches(image_array, h_patch_size=H_PATCH_SIZE, w_patch_size=W_PATCH_SIZE):
@@ -82,7 +82,7 @@ def calculate_similarity(patches, reference_patch):
 
 def plot_similar_patches(image_array, similar_patches,
                          h_patch_index, w_patch_index,
-                         h_patch_size=16, w_patch_size=16):
+                         h_patch_size=H_PATCH_SIZE, w_patch_size=W_PATCH_SIZE):
 
     img = image_array.transpose(1, 2, 0)
 
@@ -135,8 +135,8 @@ reference_patch, h_patch_index, w_patch_index = get_reference_patch(
     patches,
     h_patches,
     w_patches,
-    h_patch_index=45,
-    w_patch_index=30
+    h_patch_index=3,
+    w_patch_index=3
 )
 
 patches = normalize_patches(patches)
@@ -148,9 +148,9 @@ print(similarity_matrix)
 similar_patches = return_similar_patches(
     image_array,
     similarity_matrix,
-    topk=150,
-    h_patch_size=16,
-    w_patch_size=16
+    topk=15,
+    h_patch_size=H_PATCH_SIZE,
+    w_patch_size=W_PATCH_SIZE
 )
 
 print(similar_patches)
