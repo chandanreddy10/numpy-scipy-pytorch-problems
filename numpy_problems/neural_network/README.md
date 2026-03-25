@@ -1,1 +1,1 @@
-##### Implementing Neural Network and training components in pure numpy.
+#### Implementing Neural Network and training components in pure numpy.
