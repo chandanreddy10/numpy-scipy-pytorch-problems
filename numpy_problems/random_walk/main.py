@@ -54,7 +54,7 @@ def generate_grid(x=X, y=Y):
     X, Y = np.meshgrid(x, y)
     return X, Y
 
-def plot_grid(X, Y, start_loc=(0,0), end_loc=(4,4)):
+def plot_grid(X, Y, start_loc=(0,0), end_loc=(4,4), filename="grid_plot"):
     start_x, start_y = start_loc[0], start_loc[1]
     end_x, end_y = end_loc[0], end_loc[1]
 
@@ -63,13 +63,17 @@ def plot_grid(X, Y, start_loc=(0,0), end_loc=(4,4)):
     plt.scatter(start_x, start_y, c='green', s=200, label='Start')
     plt.scatter(end_x,end_y, c='red', s=200, label='Goal')
     plt.grid(True)
-    
+    plt.xticks(X[0])
+    plt.yticks( Y[:, 0])
+
     plt.gca().set_aspect('equal', adjustable='box')
     plt.legend()
-    plt.title("Grid with np.meshgrid")
+    plt.title("Grid Plot")
+    plt.savefig(f"misc/{filename}.jpg")
     plt.show()
-### Moving the Project to bigger one.
-#Random Walks as City Navigation
+
+    print("Saved Grid Plot.")
+#Random Walks as Grid Navigation
 # path = elementary_random_walk()
 # plot_random_walk(path)
 # path = gauss_random_walk()
