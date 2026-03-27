@@ -43,7 +43,10 @@ def plot_random_walk(path, filename="random_walk"):
     plt.savefig(f"misc/{filename}.jpg")
     plt.show()
     print("Saved Fig")
-path = elementary_random_walk()
-plot_random_walk(path)
-path = gauss_random_walk()
-plot_random_walk(path, filename="gauss_random_walk")
+
+### Moving the Project to bigger one.
+#Random Walks as City Navigation
+# path = elementary_random_walk()
+# plot_random_walk(path)
+# path = gauss_random_walk()
+# plot_random_walk(path, filename="gauss_random_walk")
