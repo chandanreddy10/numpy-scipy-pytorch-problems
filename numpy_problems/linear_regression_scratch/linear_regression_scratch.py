@@ -19,9 +19,9 @@ X_test = test_data.drop(columns="medv")
 y_train = train_data.iloc[:, -1]
 X_train = train_data.drop(columns="medv")
 
-print(X_train.shape, X_test.shape, y_train.shape, y_test.shape)
-random_coef = np.random.sample(X_train.shape[1])
-print(random_coef)
+coef = np.random.sample(X_train.shape[1])
+bias = np.random.sample(1)
+
 def optimize():
     pass
 
@@ -45,6 +45,8 @@ train_dataset = data_batch(X_train, y_train)
 print(train_dataset)
 for epoch in range(EPOCHS):
     for x, y in train_dataset:
-        print(x.shape,y)
+        coef_data_product = coef @ x.T
+        result = coef_data_product + bias 
+        print(result-y)
         break
 
