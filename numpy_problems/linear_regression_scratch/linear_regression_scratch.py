@@ -2,8 +2,8 @@ import numpy as np
 import pandas as pd 
 
 TEST_SIZE=0.2
-LEARNING_RATE=0.01
-BATCH_SIZE=1
+LEARNING_RATE=0.001
+BATCH_SIZE=2
 EPOCHS=1
 #Boston Housing Dataset load
 df = pd.read_csv("BostonHousing.csv")
@@ -22,10 +22,11 @@ X_train = train_data.drop(columns="medv")
 coef = np.random.sample(X_train.shape[1])
 bias = np.random.sample(1)
 
-def optimize(coef, bias, pred, y, X, LEARNING_RATE=LEARNING_RATE):
+def optimize(coef, bias, pred, X, y, LEARNING_RATE=LEARNING_RATE):
     #MSE Loss
     error = (pred - y)
-    grad_coef = (2/len(pred)) * (X.T @ error)
+    print(error, X)
+    grad_coef = (2 / len(pred)) * (X.T @ error)
     grad_bias = (2 / len(pred)) * np.sum(error)
 
     coef = coef - LEARNING_RATE * grad_coef
@@ -42,17 +43,20 @@ def data_batch(X_train, y_train, BATCH_SIZE=BATCH_SIZE):
     y_train = np.array(y_train)
     dataset = []
     for index in range(0,X_train.shape[0],BATCH_SIZE):
-        X_temp = X_train[index:index+BATCH_SIZE].flatten()
+        X_temp = X_train[index:index+BATCH_SIZE]
         y_temp = y_train[index:index+BATCH_SIZE]
         dataset.append((X_temp, y_temp))
     return dataset
 
 train_dataset = data_batch(X_train, y_train)
-print(train_dataset)
 for epoch in range(EPOCHS):
-    for x, y in train_dataset:
-        coef_data_product = coef @ x.T
-        pred = coef_data_product + bias 
-        print(loss_function(pred, y))
-        break
+    for index, (x, y) in enumerate(train_dataset):
+        print("Before Optimize Coef and bias : \n", coef, bias)
+        pred = np.dot(coef, x.T) + bias
+        loss = loss_function(pred, y)
+        print(loss)
+        coef, bias = optimize(coef, bias, pred, x, y)
+        print("After Optimize Coef and bias : \n", coef, bias)
+        if index == 2:
+            break
 
