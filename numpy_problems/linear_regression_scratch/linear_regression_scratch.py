@@ -22,14 +22,20 @@ X_train = train_data.drop(columns="medv")
 coef = np.random.sample(X_train.shape[1])
 bias = np.random.sample(1)
 
-def optimize():
-    pass
+def optimize(coef, bias, pred, y, X, LEARNING_RATE=LEARNING_RATE):
+    #MSE Loss
+    error = (pred - y)
+    grad_coef = (2/len(pred)) * (X.T @ error)
+    grad_bias = (2 / len(pred)) * np.sum(error)
 
-def gradient():
-    pass
+    coef = coef - LEARNING_RATE * grad_coef
+    bias = bias - LEARNING_RATE * grad_bias
+    
+    return coef, bias 
 
-def loss_function():
-    pass
+def loss_function(y_pred, y_true):
+    #MSE Loss 
+    return np.mean((y_pred - y_true)**2)
 
 def data_batch(X_train, y_train, BATCH_SIZE=BATCH_SIZE):
     X_train = np.array(X_train)
@@ -46,7 +52,7 @@ print(train_dataset)
 for epoch in range(EPOCHS):
     for x, y in train_dataset:
         coef_data_product = coef @ x.T
-        result = coef_data_product + bias 
-        print(result-y)
+        pred = coef_data_product + bias 
+        print(loss_function(pred, y))
         break
 
