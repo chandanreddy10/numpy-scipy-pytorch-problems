@@ -91,7 +91,7 @@ plt.grid(True)
 plt.savefig("MSE_loss_plot.jpg", dpi=300)
 plt.show()
 
-#test Prediction
+#test
 y_test_pred = predict(X_test, coef, bias)
 test_loss = loss_function(y_test_pred, y_test)
 print(f"\nTest MSE Loss: {test_loss:.4f}")
@@ -101,9 +101,9 @@ plt.scatter(y_test, y_test_pred, color='blue', alpha=0.6)
 plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--', lw=2)
 plt.xlabel("True Values")
 plt.ylabel("Predicted Values")
-plt.title("Sklearn Linear Regression Predictions")
+plt.title("Linear Regression Predictions")
 plt.grid(True)
 plt.savefig("scratch_lin_reg.jpg",dpi=300)
 plt.show()
 
-#Test MSE recorded in my last iteration 20.3541
+#Test MSE recorded in my last iteration 17.0899
