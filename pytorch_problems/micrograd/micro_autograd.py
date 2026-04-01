@@ -7,11 +7,11 @@ class GradObject:
     
     def __add__(self, other):
         print("Operator overloading for gradient calculation")
-        return self.value + other.value
+        return GradObject(self.value + other.value)
     def __mul__(self, other):
-        return self.value * other.value
+        return GradObject(self.value * other.value)
     def __repr__(self):
-        pass
+        return f"GradObject({self.value})"
 
 #Example 
 x1 = GradObject(2)
