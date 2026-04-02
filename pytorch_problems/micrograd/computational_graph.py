@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np 
 import random 
 
+#Expand the Project to general purporse computational graph generator
 class GradObject:
     def __init__(self, value, name, input_nodes=None):
         self.value = value
