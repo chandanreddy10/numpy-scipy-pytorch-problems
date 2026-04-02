@@ -3,21 +3,32 @@ import matplotlib.pyplot as plt
 import numpy as np 
 import random 
 
-#Expand the Project to general purporse computational graph generator
 class node:
-    def __init__(self, value, name, input_nodes=None):
+    def __init__(self, value, input_nodes=None, op=""):
         self.value = value
         self.grad = 0
         self._input_nodes = input_nodes
-        self.name = name
+        self.op = op
 
     def __add__(self, other):
-        name = random.choice(["a","b","c","d","e"])
-        return node(self.value + other.value, name, input_nodes=[self.name, other.name])
+        out = node(self.value+other.value, input_nodes=[self, other], op="+")
+        return out
     
     def __mul__(self, other):
-        name = random.choice(["a","b","c","d","e"])
-        return node(self.value * other.value, name, input_nodes=[self.name, other.name])
+        out = node(self.value*other.value, input_nodes=[self, other], op="*")
+        return out
+    
+    def __truediv__(self, other):
+        out = node(self.value / other.value, input_nodes=[self, other], op="/")
+        return out 
+    
+    def __floordiv__(self, other):
+        out = node(self.value // other.value, input_nodes=[self, other], op="//")
+        return out 
+    
+    def __pow__(self, other):
+        out = node(self.value**other, input_nodes=[self], op="^")
+        return out 
     
     def __repr__(self):
         return f"node({self.value})"
