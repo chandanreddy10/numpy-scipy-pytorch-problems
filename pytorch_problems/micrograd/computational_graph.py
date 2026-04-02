@@ -1,7 +1,8 @@
 import networkx as nx
 import matplotlib.pyplot as plt
-import numpy as np 
-import random 
+import numpy as np
+import random
+
 
 class node:
     def __init__(self, value, input_nodes=None, op=""):
@@ -11,49 +12,64 @@ class node:
         self.op = op
 
     def __add__(self, other):
-        out = node(self.value+other.value, input_nodes=[self, other], op="+")
+        out = node(self.value + other.value, input_nodes=[self, other], op="+")
         return out
-    
+
     def __mul__(self, other):
-        out = node(self.value*other.value, input_nodes=[self, other], op="*")
+        out = node(self.value * other.value, input_nodes=[self, other], op="*")
         return out
-    
+
     def __truediv__(self, other):
         out = node(self.value / other.value, input_nodes=[self, other], op="/")
-        return out 
-    
+        return out
+
     def __floordiv__(self, other):
         out = node(self.value // other.value, input_nodes=[self, other], op="//")
-        return out 
-    
+        return out
+
     def __pow__(self, other):
         out = node(self.value**other, input_nodes=[self], op="^")
-        return out 
-    
+        return out
+
     def __repr__(self):
         return f"node({self.value})"
 
     def build_graph(self):
         node_edges = []
 
-        def inner_function(n):
+        def inner_function(n, level):
             if isinstance(n, node) and n._input_nodes is not None:
                 for value in n._input_nodes:
                     if isinstance(value, node):
-                        inner_function(value)
-                        if not (value, value._input_nodes) in node_edges:
-                            node_edges.append((value, value._input_nodes))
-        inner_function(self)
-        node_edges.append((self, self._input_nodes))
+                        inner_function(value, level + 1)
+                        if (
+                            not {
+                                "value": value,
+                                "child": value._input_nodes,
+                                "level": level,
+                            }
+                            in node_edges
+                        ):
+                            node_edges.append(
+                                {
+                                    "value": value,
+                                    "child": value._input_nodes,
+                                    "level": level,
+                                }
+                            )
+
+        inner_function(self, 0)
+        node_edges.append({"value": self, "child": self._input_nodes, "level": 0})
         return node_edges
 
-#Equation = x1 + x2 + x1X2
-x1 = node(2, "x1")
-x2 = node(3, "x2")
 
-y = x1 * x2 + x1 + x2
-print(x1.build_graph())
+# Equation = x1 + x2 + x1X2
+x1 = node(2)
+x2 = node(3)
 
+y = x1 * x2 + x1 / x2
+vertices = y.build_graph()
+print(vertices)
 # graph = nx.DiGraph()
 # graph.add_node("x1",layer=0, value=f"Value:{x1.value}\nGrad:{x1.grad}")
 # graph.add_node("x2",layer=0,  value=f"Value:{x2.value}\nGrad:{x2.grad}")
