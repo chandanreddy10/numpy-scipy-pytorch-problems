@@ -40,6 +40,8 @@ class node:
         return f"node({self.value})"
 
     def build_graph(self):
+        """Build the graph with nodes, edges and levels for easy plotting.
+        Recursion traversal for easy plotting."""
         node_edges = []
 
         def inner_function(n, level):
