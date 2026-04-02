@@ -3,7 +3,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import random
 
-
+#Program to generate any type of computational graph for the given operations
+NODE_SIZE=25000
 class node:
     def __init__(self, value, input_nodes=None, op=""):
         self.value = value
@@ -14,7 +15,11 @@ class node:
     def __add__(self, other):
         out = node(self.value + other.value, input_nodes=[self, other], op="+")
         return out
-
+    
+    def __sub__(self, other):
+        out = node(self.value - other.value, input_nodes=[self, other], op="-")
+        return out
+    
     def __mul__(self, other):
         out = node(self.value * other.value, input_nodes=[self, other], op="*")
         return out
@@ -41,7 +46,7 @@ class node:
             if isinstance(n, node) and n._input_nodes is not None:
                 for value in n._input_nodes:
                     if isinstance(value, node):
-                        inner_function(value, level + 1)
+                        inner_function(value, level - 1)
                         if (
                             not {
                                 "value": value,
@@ -57,40 +62,41 @@ class node:
                                     "level": level,
                                 }
                             )
-
-        inner_function(self, 0)
-        node_edges.append({"value": self, "child": self._input_nodes, "level": 0})
+        inner_function(self, 100)
+        node_edges.append({"value": self, "child": self._input_nodes, "level":101 })
         return node_edges
 
+x1 = node(4)
+x2 = node(2)
+x3 = node(5)
 
-# Equation = x1 + x2 + x1X2
-x1 = node(2)
-x2 = node(3)
-
-y = x1 * x2 + x1 / x2
+y = x3 - x2 + x1 * x2 + x1 / x2 - x1**2 + x2 ** 2
 vertices = y.build_graph()
-print(vertices)
-# graph = nx.DiGraph()
-# graph.add_node("x1",layer=0, value=f"Value:{x1.value}\nGrad:{x1.grad}")
-# graph.add_node("x2",layer=0,  value=f"Value:{x2.value}\nGrad:{x2.grad}")
-# graph.add_node(f"{a.name}",layer=1,  value=f"Value:{a.value}\nGrad:{a.grad}")
-# graph.add_node(f"{d.name}",layer=1,  value=f"Value:{d.value}\nGrad:{d.grad}")
-# graph.add_node(f"{y.name}",layer=2,  value=f"Value:{y.value}\nGrad:{y.grad}")
+graph = nx.DiGraph()
 
-# for edge in a._input_nodes:
-#     graph.add_edge(edge, f"{a.name}")
-#     graph.add_edge(edge, f"{a.name}")
+for vertex in vertices:
+    child = vertex.get("child")
+    value = vertex.get("value")
+    layer = vertex.get("level")
+    graph.add_node(value, layer=layer, value=value.op)
+    print(vertex, layer)
 
-# for edge in d._input_nodes:
-#     graph.add_edge(edge, f"{d.name}")
-#     graph.add_edge(edge, f"{d.name}")
+    if child is not None:
+        for child_node in child:
+            graph.add_edge(child_node, value)
 
-# for edge in y._input_nodes:
-#     graph.add_edge(edge, f"{y.name}")
-#     graph.add_edge(edge, f"{y.name}")
 
-# pos = nx.multipartite_layout(graph, subset_key="layer")
-# labels = {n: f"{n}\n{graph.nodes[n]['value']}" for n in graph.nodes()}
-# nx.draw(graph, pos, with_labels=True, labels=labels, node_size=5000, node_color='lightblue', font_size=10)
-# # plt.savefig("misc/first_graph.jpg", dpi=300)
-# plt.show()
+pos = nx.multipartite_layout(graph, subset_key="layer")
+labels = {n: f"{n}\n{graph.nodes[n]['value']}" for n in graph.nodes()}
+plt.figure(figsize=(8, 8))
+
+nx.draw(graph, pos, with_labels=True, labels=labels,
+        node_size=NODE_SIZE / len(vertices), node_color='lightblue', font_size=5)
+
+plt.xlim(-1.5,1.5)
+plt.ylim(-1.5,1.5)
+
+plt.gca().set_aspect('equal')  
+plt.axis('off')    
+plt.savefig("misc/graph.jpg", dpi=300)
+plt.show()
