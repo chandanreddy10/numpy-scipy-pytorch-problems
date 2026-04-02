@@ -4,7 +4,7 @@ import numpy as np
 import random 
 
 #Expand the Project to general purporse computational graph generator
-class GradObject:
+class node:
     def __init__(self, value, name, input_nodes=None):
         self.value = value
         self.grad = 0
@@ -13,18 +13,18 @@ class GradObject:
 
     def __add__(self, other):
         name = random.choice(["a","b","c","d","e"])
-        return GradObject(self.value + other.value, name, input_nodes=[self.name, other.name])
+        return node(self.value + other.value, name, input_nodes=[self.name, other.name])
     
     def __mul__(self, other):
         name = random.choice(["a","b","c","d","e"])
-        return GradObject(self.value * other.value, name, input_nodes=[self.name, other.name])
+        return node(self.value * other.value, name, input_nodes=[self.name, other.name])
     
     def __repr__(self):
-        return f"GradObject({self.value})"
+        return f"node({self.value})"
 
 #Equation = x1 + x2 + x1X2
-x1 = GradObject(2, "x1")
-x2 = GradObject(3, "x2")
+x1 = node(2, "x1")
+x2 = node(3, "x2")
 
 a = x1 * x2
 d = x1 + x2
