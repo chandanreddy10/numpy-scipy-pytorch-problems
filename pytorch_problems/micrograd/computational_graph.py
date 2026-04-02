@@ -33,35 +33,48 @@ class node:
     def __repr__(self):
         return f"node({self.value})"
 
+    def build_graph(self):
+        node_edges = []
+
+        def inner_function(n):
+            if isinstance(n, node) and n._input_nodes is not None:
+                for value in n._input_nodes:
+                    if isinstance(value, node):
+                        inner_function(value)
+                        if not (value, value._input_nodes) in node_edges:
+                            node_edges.append((value, value._input_nodes))
+        inner_function(self)
+        node_edges.append((self, self._input_nodes))
+        return node_edges
+
 #Equation = x1 + x2 + x1X2
 x1 = node(2, "x1")
 x2 = node(3, "x2")
 
-a = x1 * x2
-d = x1 + x2
-y = d + a
+y = x1 * x2 + x1 + x2
+print(x1.build_graph())
 
-graph = nx.DiGraph()
-graph.add_node("x1",layer=0, value=f"Value:{x1.value}\nGrad:{x1.grad}")
-graph.add_node("x2",layer=0,  value=f"Value:{x2.value}\nGrad:{x2.grad}")
-graph.add_node(f"{a.name}",layer=1,  value=f"Value:{a.value}\nGrad:{a.grad}")
-graph.add_node(f"{d.name}",layer=1,  value=f"Value:{d.value}\nGrad:{d.grad}")
-graph.add_node(f"{y.name}",layer=2,  value=f"Value:{y.value}\nGrad:{y.grad}")
+# graph = nx.DiGraph()
+# graph.add_node("x1",layer=0, value=f"Value:{x1.value}\nGrad:{x1.grad}")
+# graph.add_node("x2",layer=0,  value=f"Value:{x2.value}\nGrad:{x2.grad}")
+# graph.add_node(f"{a.name}",layer=1,  value=f"Value:{a.value}\nGrad:{a.grad}")
+# graph.add_node(f"{d.name}",layer=1,  value=f"Value:{d.value}\nGrad:{d.grad}")
+# graph.add_node(f"{y.name}",layer=2,  value=f"Value:{y.value}\nGrad:{y.grad}")
 
-for edge in a._input_nodes:
-    graph.add_edge(edge, f"{a.name}")
-    graph.add_edge(edge, f"{a.name}")
+# for edge in a._input_nodes:
+#     graph.add_edge(edge, f"{a.name}")
+#     graph.add_edge(edge, f"{a.name}")
 
-for edge in d._input_nodes:
-    graph.add_edge(edge, f"{d.name}")
-    graph.add_edge(edge, f"{d.name}")
+# for edge in d._input_nodes:
+#     graph.add_edge(edge, f"{d.name}")
+#     graph.add_edge(edge, f"{d.name}")
 
-for edge in y._input_nodes:
-    graph.add_edge(edge, f"{y.name}")
-    graph.add_edge(edge, f"{y.name}")
+# for edge in y._input_nodes:
+#     graph.add_edge(edge, f"{y.name}")
+#     graph.add_edge(edge, f"{y.name}")
 
-pos = nx.multipartite_layout(graph, subset_key="layer")
-labels = {n: f"{n}\n{graph.nodes[n]['value']}" for n in graph.nodes()}
-nx.draw(graph, pos, with_labels=True, labels=labels, node_size=5000, node_color='lightblue', font_size=10)
-# plt.savefig("misc/first_graph.jpg", dpi=300)
-plt.show()
+# pos = nx.multipartite_layout(graph, subset_key="layer")
+# labels = {n: f"{n}\n{graph.nodes[n]['value']}" for n in graph.nodes()}
+# nx.draw(graph, pos, with_labels=True, labels=labels, node_size=5000, node_color='lightblue', font_size=10)
+# # plt.savefig("misc/first_graph.jpg", dpi=300)
+# plt.show()
