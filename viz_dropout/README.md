@@ -1,3 +1,3 @@
 ## Dropout Training Visualization
 
-![Dropout Visualisation](viz_dropout/viz/dropout_training.gif)
+![Dropout Visualisation](viz/dropout_training.gif)
